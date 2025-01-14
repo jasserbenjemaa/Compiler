@@ -15,7 +15,12 @@ typedef enum {
   T_KEYWORD,
   T_OPEN_BRAC,
   T_CLOSE_BRAC,
+  T_OPEN_SQUAR_BRAC,
+  T_CLOSE_SQUAR_BRAC,
   T_SEMICOL,
+  T_DOT,
+  T_COMMA,
+  T_COLON,
 }TokenType;
 
 typedef struct {

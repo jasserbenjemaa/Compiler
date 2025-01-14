@@ -1,6 +1,6 @@
 int  main(int argc, char *argv[])
 {
-  char *input = "if return 9893;";
+  char *input = "int main(int argc,char *argv){}";
   lexer(input);
   return 0;
 }
