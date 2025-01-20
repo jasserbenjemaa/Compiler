@@ -5,10 +5,17 @@
 #include "lexer.h"
 
 void print_token(Token token){
-  printf("token type %d token value %s",token.type,token.lexem);
+  printf(" %s  %s",TokenTypeNames[token.type],token.lexem);
+}
+int checkIsKeyword(char keyword[255]){
+  for(int i=0;(i<sizeof(keywords)/sizeof(keywords[0]));i++){
+      if(strcmp(keywords[i],keyword)==0)return 1;
+  }
+  return 0;
+      
 }
 
-Token checkPoint(char ptr){
+Token checkIsPoint(char ptr){
   Token t;
   t.lexem[0]=ptr;
   switch (ptr) {
@@ -27,7 +34,7 @@ Token checkPoint(char ptr){
   }
   return t;
 }
-Token checkSymbol(char ptr){
+Token checkIsSymbol(char ptr){
   Token t;
   t.lexem[0]=ptr;
   switch (ptr) {
@@ -53,7 +60,7 @@ Token checkSymbol(char ptr){
   return t;
 }
 
-Token checkSign(char ptr){
+Token checkIsSign(char ptr){
   Token t;
   t.lexem[0]=ptr;
   switch (ptr) {
@@ -68,6 +75,9 @@ Token checkSign(char ptr){
       break;
     case '*':
       t.type=T_STAR;
+      break;
+    case '=':
+      t.type=T_ASSIGN;
       break;
   }
   return t;
@@ -88,7 +98,9 @@ void lexer(char *c){
     while (isalnum(*ptr)||*ptr=='_') tokenValue[i++]= *ptr++;
     
     strcpy(token.lexem,tokenValue);
-    token.type=strcmp(tokenValue,"main")==0?T_MAIN:T_KEYWORD;
+    if(checkIsKeyword(tokenValue)){token.type=T_KEYWORD;}
+    else if(strcmp(tokenValue,"main")==0){token.type=T_MAIN;}
+    else{token.type=T_ID;}
     print_token(token);
   }
   else if(isdigit(*ptr)) {
@@ -98,16 +110,16 @@ void lexer(char *c){
     strcpy(token.lexem,tokenValue);
     print_token(token);
     }
-    else if(*ptr=='+'||*ptr=='-'||*ptr=='*'||*ptr=='/'){
-      print_token(checkSign(*ptr));
+    else if(*ptr=='+'||*ptr=='-'||*ptr=='*'||*ptr=='/'||*ptr=='='){
+      print_token(checkIsSign(*ptr));
       ptr++;
     }
     else if(*ptr=='('||*ptr==')'||*ptr=='{'||*ptr=='}'||*ptr=='['||*ptr==']'){
-      print_token(checkSymbol(*ptr));
+      print_token(checkIsSymbol(*ptr));
       ptr++;
     }
     else if(*ptr==','||*ptr=='.'||*ptr==';'||*ptr==':'){
-      print_token(checkPoint(*ptr));
+      print_token(checkIsPoint(*ptr));
       ptr++;
     }
     else {
